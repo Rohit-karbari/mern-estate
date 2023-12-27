@@ -7,12 +7,13 @@ import { updateUserStart, updateUserSuccess, updateUserFailure } from '../redux/
 
 export default function Profile() {
   const fileRef = useRef(null);
-  const {currentUser} = useSelector((state) => state.user)
+  const {currentUser, loading, error} = useSelector((state) => state.user)
   const [file, setFile] = useState(undefined);
   const [filePerc, setFilePerc] = useState(0);
   const [fileUploadError, setFileUplaodError] = useState(false);
   const [formData, setFormData] = useState({})
   const dispatch = useDispatch();
+  const [updateSuccess, setUpdateSuccess] = useState(false)
 
 
 
@@ -21,6 +22,7 @@ export default function Profile() {
       // allow write: if
       // request.resource.size < 2 * 1024 * 1024 &&
       // request.resource.contentType.matches('image/.*')
+      console.log(error);
       useEffect(() => {
         if(file){
           handleFileupload(file);
@@ -69,6 +71,7 @@ export default function Profile() {
             return
           }
           dispatch(updateUserSuccess(data));
+          setUpdateSuccess(true)
         } catch (error) {
           dispatch(updateUserFailure(error.message));
         }
@@ -90,12 +93,14 @@ export default function Profile() {
         <input type='text' onChange={handleChange} defaultValue={currentUser.username}placeholder='username' id='username' className='border p-3 rounded-lg'/>
         <input type='text' onChange={handleChange} defaultValue={currentUser.email}placeholder='email' id='email' className='border p-3 rounded-lg'/>
         <input type='password' onChange={handleChange} placeholder='password' id='password' className='border p-3 rounded-lg'/>
-        <button className='bg-slate-700 text-white rounded-lg p-3 uppercase hover:opacity-95 disabled:opacity-80'>update</button>
+        <button disabled={loading}className='bg-slate-700 text-white rounded-lg p-3 uppercase hover:opacity-95 disabled:opacity-80'>{loading? "Loading...": "Update"}</button>
       </form>
       <div className='flex justify-between mt-5'>
         <span className='text-red-700 cursor-pointer'>Delete account</span>
         <span className='text-red-700 cursor-pointer'>Sign out</span>
       </div>
+      <p className='text-red-700 mt-5'>{error ? error : ""}</p>
+      <p className='text-green-700 mt-5'>{updateSuccess? "User is updated succesfully!": null}</p>
     </div>
   )
 }
