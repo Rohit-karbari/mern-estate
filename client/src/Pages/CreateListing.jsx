@@ -3,7 +3,7 @@ import {getDownloadURL, getStorage, uploadBytesResumable, ref} from "firebase/st
 import {app} from "../firebase"
 import { set } from 'mongoose';
 import { useSelector } from 'react-redux';
-import {useNevegate} from "react-router-dom"
+import {useNavigate} from "react-router-dom"
 
 export default function CreateListing() {
   const {currentUser} = useSelector(state => state.user);
